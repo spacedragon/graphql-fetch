@@ -1,0 +1,26 @@
+name: graphql_fetch_generator
+description: The graphql client generator.
+version: 0.0.1
+#homepage: https://www.example.com
+#author: draco <email@example.com>
+
+environment:
+  sdk: '>=1.24.0 <3.0.0'
+
+dependencies:
+  graphql_fetch:
+    path: ../client
+  graphql_parser: any
+  barback: any
+  build_barback: any
+  code_builder: any
+  json_object: "^1.0.19+1"
+  logging: any
+  dart_style: any
+  build: ^0.10.0
+  built_mirrors: ^0.6.0
+#  path: ^1.4.1
+
+dev_dependencies:
+  test: ^0.12.0
+

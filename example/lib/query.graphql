@@ -1,0 +1,10 @@
+query test($first: Int!) {
+    allShows(first: $first) {
+        id
+        title
+        episodes {
+            id
+            quality
+        }
+    }
+}

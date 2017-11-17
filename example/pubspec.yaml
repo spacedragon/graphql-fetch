@@ -1,0 +1,22 @@
+name: example
+description: A example project
+version: 0.0.1
+
+environment:
+  sdk: '>=1.24.0 <3.0.0'
+
+dependencies:
+  graphql_fetch:
+      path: ../client
+dev_dependencies:
+  test: ^0.12.0
+  graphql_fetch_generator:
+      path: ../generator
+
+transformers:
+# graphql_client_generator transformer, should not be used
+#  - graphql_fetch_generator
+#    collectionFields:
+#      - nodes
+#      - edges
+
