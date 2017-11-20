@@ -1,25 +1,26 @@
 name: graphql_fetch_generator
-description: The graphql client generator.
+description: The code generator for graphql_fetch.
 version: 0.0.1
-#homepage: https://www.example.com
-#author: draco <email@example.com>
+homepage: https://github.com/spacedragon/graphql-fetch
+author: draco <allendragon@gmail.com>
 
 environment:
   sdk: '>=1.24.0 <3.0.0'
 
 dependencies:
-  graphql_fetch:
-    path: ../client
-  graphql_parser: any
-  barback: any
-  build_barback: any
-  code_builder: any
+  graphql_fetch: ^0.0.1
+  graphql_parser: ^1.0.0+1
+  barback: ^0.15.2+13
+  build_barback: ^0.4.0+2
+  code_builder: ^2.0.0
   json_object: "^1.0.19+1"
-  logging: any
-  dart_style: any
+  logging: ^0.11.3+1
+  dart_style: ^1.0.8
   build: "^0.11.0"
   build_runner: "^0.6.0+1"
-  path: any
+  path: ^1.5.0
+  glob: ^1.1.5
+
 
 dev_dependencies:
   test: ^0.12.0

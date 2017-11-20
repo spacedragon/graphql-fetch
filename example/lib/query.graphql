@@ -4,3 +4,11 @@ query test($first: Int!) {
          ...showFields
     }
 }
+
+mutation createUser($name: String!, $alias: String!) {
+    createUser(name: $name, alias: $alias){
+        id
+        name
+        alias
+    }
+}

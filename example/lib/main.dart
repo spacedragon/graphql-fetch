@@ -14,4 +14,6 @@ main() async{
     print(s.episodes);
     s.episodes.forEach((e) => print(e.episode));
   });
+  GraphqlResponse<CreateUserResult> ret = await client.query(createUser(name: "test", alias: "test"));
+  print(ret.data.createUser.name);
 }
