@@ -4,16 +4,16 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:json_object/json_object.dart';
 
-GraphqlSetting createGraphqlSetting(
+GraphqlBuildSetting createSetting(
     {String schemaUrl,
-    String method: "post",
-    bool postIntrospectionQuery: true,
-    String schemaFile}) {
-  return new GraphqlSetting(
+      String method: "post",
+      bool postIntrospectionQuery: true,
+      String schemaFile}) {
+  return new GraphqlBuildSetting(
       schemaUrl, method, postIntrospectionQuery, schemaFile);
 }
 
-class GraphqlSetting {
+class GraphqlBuildSetting {
   final Logger log = new Logger('GraphqlSetting');
 
   String schemaUrl;
@@ -22,7 +22,7 @@ class GraphqlSetting {
 
   String schemaFile;
 
-  GraphqlSetting(this.schemaUrl, this.method, this.postIntrospectionQuery,
+  GraphqlBuildSetting(this.schemaUrl, this.method, this.postIntrospectionQuery,
       this.schemaFile);
 
   dynamic _schemaObject = null;

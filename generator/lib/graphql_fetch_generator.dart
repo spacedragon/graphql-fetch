@@ -3,14 +3,14 @@ library graphql_client_generator;
 import 'dart:async';
 
 import 'package:build/build.dart';
-import './src/GraqphqlSetting.dart';
+import './src/GraphqlSetting.dart';
 import './src/GraphqlSchema.dart';
 import 'package:logging/logging.dart';
 import './src/generator.dart';
 import 'package:glob/glob.dart';
 
 class GraphqlBuilder extends Builder {
-  GraphqlSetting _setting;
+  GraphqlBuildSetting _setting;
   final Logger log = new Logger('GraphqlSetting');
 
   Resource<GraphqlSchema> _schemaResource;
@@ -41,7 +41,6 @@ class GraphqlBuilder extends Builder {
     String query = await buildStep.readAsString(buildStep.inputId);
     var module = parser.parse(query);
     var code = module.generate(output.path);
-    log.info(code);
     buildStep.writeAsString(output, code);
     return new Future.value();
   }
