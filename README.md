@@ -36,7 +36,7 @@ Future main() async {
 
 4. Run `tool/build` to generate `*.graphql.dart` files
 
-5. use generator code:
+5. use generated code:
 
 ```dart
 import 'package:graphql_fetch/graphql_fetch.dart';
