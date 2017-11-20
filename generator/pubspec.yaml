@@ -1,6 +1,6 @@
 name: graphql_fetch_generator
 description: The code generator for graphql_fetch.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/spacedragon/graphql-fetch
 author: draco <allendragon@gmail.com>
 
@@ -8,7 +8,7 @@ environment:
   sdk: '>=1.24.0 <3.0.0'
 
 dependencies:
-  graphql_fetch: ^0.0.1
+  graphql_fetch: ^0.0.2
   graphql_parser: ^1.0.0+1
   barback: ^0.15.2+13
   build_barback: ^0.4.0+2
