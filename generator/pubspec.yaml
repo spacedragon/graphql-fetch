@@ -17,9 +17,9 @@ dependencies:
   json_object: "^1.0.19+1"
   logging: any
   dart_style: any
-  build: ^0.10.0
-  built_mirrors: ^0.6.0
-#  path: ^1.4.1
+  build: "^0.11.0"
+  build_runner: "^0.6.0+1"
+  path: any
 
 dev_dependencies:
   test: ^0.12.0

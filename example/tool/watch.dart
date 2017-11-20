@@ -9,5 +9,5 @@ import 'package:build_runner/build_runner.dart';
 import 'build.dart';
 
 Future main() async {
-  watch(phases, deleteFilesByDefault: true);
+  watch(phases, deleteFilesByDefault: true,  writeToCache: true);
 }

@@ -7,6 +7,7 @@ import './src/GraqphqlSetting.dart';
 import './src/GraphqlSchema.dart';
 import 'package:logging/logging.dart';
 import './src/generator.dart';
+import 'package:glob/glob.dart';
 
 class GraphqlBuilder extends Builder {
   GraphqlSetting _setting;
@@ -16,7 +17,7 @@ class GraphqlBuilder extends Builder {
 
   GraphqlBuilder(this._setting) {
     this._schemaResource =
-        new Resource(() => new GraphqlSchema(_setting.getSchema()));
+    new Resource(() => new GraphqlSchema(_setting.getSchema()));
   }
 
   @override
@@ -28,13 +29,20 @@ class GraphqlBuilder extends Builder {
   Future build(BuildStep buildStep) async {
     GraphqlSchema schema = await buildStep.fetchResource(_schemaResource);
     await schema.awaitForSchema();
-    log.info("handling ${buildStep.inputId.path}");
     var parser = new GraphqlParser(schema);
+    if (!schema.fragmentsRegistered) {
+      await for (AssetId aid in buildStep.findAssets(new Glob("**.graphql"))) {
+        var content = await buildStep.readAsString(aid);
+        parser.registerFragment(content, aid.addExtension(".dart").path);
+      }
+    }
+    log.info("handling ${buildStep.inputId.path}");
+    var output = buildStep.inputId.addExtension('.dart');
     String query = await buildStep.readAsString(buildStep.inputId);
     var module = parser.parse(query);
-    var code = module.generate();
+    var code = module.generate(output.path);
     log.info(code);
-    buildStep.writeAsString(buildStep.inputId.addExtension('.dart'), code);
+    buildStep.writeAsString(output, code);
     return new Future.value();
   }
 }

@@ -30,12 +30,12 @@ class GraphqlResponse<T> extends MapObject {
 
   Function constructorOfData;
 
-  T get data => getProp("data", constructorOfData) as T;
+  T get data => MapObject.getProp(this,"data", constructorOfData) as T;
 
   set data(T data) => this["data"] = data;
 
   List<GraphqlResponseError> get errors =>
-      getProp("errors", (d) => new GraphqlResponseError()..mapObject = d);
+      MapObject.getProp(this,"errors", (d) => new GraphqlResponseError()..mapObject = d);
 
   bool hasError() {
     return errors != null && errors.length > 0;
@@ -49,13 +49,13 @@ class GraphqlResponseError extends MapObject {
   List locations;
 }
 
-class MapObject {
+class MapObject extends Object{
   Map<String, dynamic> mapObject;
 
   MapObject();
 
-  dynamic getProp<T>(String key, Function(Map) f) {
-    var value = this[key];
+   static getProp(dynamic obj, String key, Function(Map) f) {
+    var value = obj[key];
     if (value is Map) {
       return f(value);
     } else if (value is List) {
@@ -71,6 +71,12 @@ class MapObject {
   }
 
   Map toJson() => this.mapObject;
+
+  @override
+  String toString() {
+    return mapObject.toString();
+  }
+
 }
 
 T Identity<T>(T t) => t;

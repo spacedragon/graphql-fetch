@@ -1,0 +1,9 @@
+fragment showFields on Show {
+    id
+    title
+    episodes {
+        id
+        quality
+        episode
+    }
+}

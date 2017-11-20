@@ -13,5 +13,5 @@ final phases = [
 ];
 
 Future main() async {
-  await build(phases, deleteFilesByDefault: true);
+  await build(phases, deleteFilesByDefault: true, writeToCache: false);
 }
