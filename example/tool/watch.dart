@@ -8,6 +8,7 @@ import 'package:build_runner/build_runner.dart';
 
 import 'build.dart';
 
+
 Future main() async {
-  watch([action], deleteFilesByDefault: true,  writeToCache: true);
+  watch([action ], deleteFilesByDefault: true);
 }

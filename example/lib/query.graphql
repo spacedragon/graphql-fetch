@@ -1,7 +1,18 @@
-
-query test($first: Int!) {
-    allShows(first: $first) {
-         ...showFields
+query findShow($filter: ShowFilter) {
+    allShows(filter: $filter){
+        ...showFields
     }
 }
-
+query someShow($first: Int!) {
+    allShows(first: $first){
+        ...showWithAlias
+    }
+}
+fragment showWithAlias on Show {
+    id
+    title
+    aliases {
+        id
+        alias
+    }
+}

@@ -6,8 +6,7 @@ environment:
   sdk: '>=1.24.0 <3.0.0'
 
 dependencies:
-  graphql_fetch:
-      path: ../client
+  graphql_fetch: 0.0.3
 dev_dependencies:
   test: ^0.12.0
   graphql_fetch_generator:
@@ -20,3 +19,6 @@ transformers:
 #      - nodes
 #      - edges
 
+dependency_overrides:
+  graphql_fetch:
+    path: ../client

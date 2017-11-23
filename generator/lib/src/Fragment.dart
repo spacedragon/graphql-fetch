@@ -9,19 +9,20 @@ class Fragment extends BaseTypes{
 
   get className => "${upperCaseFirst(_context.name)}Fragment";
 
-
   void generate(String path,FileBuilder fileBuilder){
     QueryTypes queryTypes= new QueryTypes(_schema, className, path);
-
     Class cls = new Class((ClassBuilder cb) {
-      cb.name=className;
+      cb..name=className
+      ..implements.add(MapObject)
+      ..abstract =true;
       String onType = this._context.typeCondition.typeName.name;
       var querySchema = this._schema.findObject(onType);
       for(SelectionContext sel in _context.selectionSet.selections) {
         String field = sel.field.fieldName.name;
         var typeSchema = querySchema.fields.firstWhere((f) => f.name == field);
-        queryTypes.generateGetter(field,
-            queryTypes.generateFieldType(fileBuilder, sel, typeSchema.type), cb);
+        TypedReference type = queryTypes.generateFieldType(fileBuilder, sel, typeSchema.type);
+        var getter = generateGetter(field, type);
+        cb.methods.add(getter);
       }
       FieldBuilder fb= new FieldBuilder()
       ..name = "fragmentString"
@@ -34,9 +35,7 @@ class Fragment extends BaseTypes{
     fileBuilder.body.add(cls);
     return className;
   }
-
-  registerFragment(String path) {
-    _schema.registerFragment(path, className);
+  registerFragment(path) {
+    this._schema.registerType(path, new TypedReference(refer(className, path), GraphType.OBJECT));
   }
-  
 }

@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:code_builder/code_builder.dart';
+import 'generator.dart';
 
 class GraphqlSchema {
   Future _schemaFuture;
 
   dynamic _schema;
-  Map<String, String> _typeFiles = {};
+  Map<String, TypedReference> _generatedTypes = {};
   bool fragmentsRegistered = false;
 
   GraphqlSchema(this._schemaFuture);
@@ -37,15 +37,12 @@ class GraphqlSchema {
         .firstWhere((d) => d.name == mutationName, orElse: () => null);
   }
 
-  registerFragment(String file, String fragmentName) {
+  registerType(String file, TypedReference type) {
     fragmentsRegistered = true;
-    _typeFiles[fragmentName] = file;
-  }
-  registerInputType(String file, String type) {
-    fragmentsRegistered = true;
-    _typeFiles[type] = file;
+    type.file = file;
+    _generatedTypes[type.reference.symbol] = type;
   }
   findType(String type) {
-    return _typeFiles[type];
+    return _generatedTypes[type];
   }
 }

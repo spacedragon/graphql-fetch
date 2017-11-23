@@ -8,5 +8,5 @@ var action = createBuildAction(
 
 
 Future main() async {
-  await build([action], deleteFilesByDefault: true, writeToCache: false);
+  await build([action], deleteFilesByDefault: true);
 }

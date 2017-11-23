@@ -1,10 +1,11 @@
 library graphql_fetch.client;
 
 import 'dart:async';
+import 'dart:collection';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'dart:convert';
-
+import 'package:meta/meta.dart';
 part 'graphql_query.dart';
 
 

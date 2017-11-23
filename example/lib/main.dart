@@ -7,13 +7,11 @@ main() async{
   String endpoint = "http://localhost:60000/simple/v1/cj9v7fprz00140114ed9qw3lz";
 
   GraphqlClient client =new GraphqlClient(endpoint);
-  GraphqlResponse<TestResult> result =await client.query(test(first: 5));
-  var data = result.data;
-  data.allShows.forEach((s) {
-    print(s.id);
-    print(s.episodes);
-    s.episodes.forEach((e) => print(e.episode));
-  });
-  GraphqlResponse<CreateUserResult> ret = await client.query(createUser(name: "test", alias: "test"));
-  print(ret.data.createUser.name);
+  GraphqlResponse<FindShowResult> ret1 = await client.query(someShow(first: 5));
+  print(ret1.data?.allShows);
+
+  GraphqlResponse<FindShowResult> ret = await client.query(findShow(
+    filter: new ShowFilter(aliases_some: new ShowAliasFilter(alias_contains: "Lethal Weapon"))
+  ));
+  print(ret.data?.allShows);
 }

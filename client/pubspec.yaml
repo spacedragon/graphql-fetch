@@ -1,6 +1,6 @@
 name: graphql_fetch
 description: a simple graphql client for dart
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/spacedragon/graphql-fetch
 author: draco <allendragon@gmail.com>
 
@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   http: ^0.11.3+16
+
+
 #  path: ^1.4.1
 
 dev_dependencies:

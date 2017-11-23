@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:graphql_fetch/src/client.dart';
+import 'package:graphql_fetch/graphql_fetch.dart';
 import 'dart:io';
 import 'package:logging/logging.dart';
 import 'package:json_object/json_object.dart';

@@ -3,7 +3,9 @@ part of 'generator.dart';
 class Operation extends BaseTypes {
   OperationDefinitionContext _context;
   QueryTypes _queryTypes;
+
   Operation(this._context, GraphqlSchema schema) : super(schema);
+
   void generate(String path, FileBuilder fb) {
     _queryTypes = new QueryTypes(_schema, methodName, path);
 
@@ -30,12 +32,12 @@ class Operation extends BaseTypes {
         .toList();
     String query = wrapStringCode(_context.span.text);
 
-    List<String> strings = _queryTypes.depFragments.map((r)=> "${r.symbol}.fragmentString")
-        .toList(growable: true);
+    List<String> strings = _queryTypes.depFragments.map((r) => "${r
+        .symbol}.fragmentString").toList(growable: true);
     strings.insert(0, "query");
     return new Code.scope((a) {
       return "const query = $query;"
-        "return new ${a(graphqlQuery)}("
+          "return new ${a(graphqlQuery)}("
           "${strings.join(" + ")},"
           "{${variables.join(',')}},"
           "${resultClass}.fromMap);";
@@ -44,16 +46,11 @@ class Operation extends BaseTypes {
 
   generateResultClass(
       FileBuilder b, SelectionContext context, dynamic schemaObject) {
-
-    Class cls = new Class((ClassBuilder cb) {
-      cb.name = resultClassName;
-      cb.extend = baseModel;
-      FieldBuilder fb = new FieldBuilder();
-
-      _queryTypes.generateGetter(schemaObject.name,
-          _queryTypes.generateFieldType(b, context, schemaObject.type), cb);
-      _queryTypes.generateCreator(cb);
-    });
+    var cls = new Class((ClassBuilder cb) => generateClass(
+            cb, resultClassName, {
+          schemaObject.name:
+              _queryTypes.generateFieldType(b, context, schemaObject.type)
+        }));
     b.body.add(cls);
     return resultClassName;
   }
@@ -84,8 +81,9 @@ class Operation extends BaseTypes {
         var parameterBuilder = new ParameterBuilder()
           ..name = name
           ..named = true
-          ..type =
-              inputTypes.generateInputType(fb, this._schema.findObject(type));
+          ..type = inputTypes
+              .generateInputType(fb, this._schema.findObject(type))
+              .reference;
         if (variable.type?.EXCLAMATION?.text == "!") {
           Reference required = refer("required", "package:meta/meta.dart");
           var a = new AnnotationBuilder()
