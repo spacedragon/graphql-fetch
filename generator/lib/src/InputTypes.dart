@@ -15,7 +15,7 @@ class InputTypes extends BaseTypes {
         return new TypedReference(
             refer("Iterable<${genericType.reference.symbol}>", "dart:core"),
             GraphType.LIST,
-            genericType);
+            genericReference: genericType);
       case "INPUT_OBJECT":
         String typeName = typeSchema.name;
         TypedReference generated = findType(typeName, _file);
@@ -29,8 +29,7 @@ class InputTypes extends BaseTypes {
           GraphType.INPUT_OBJECT,
         );
       case "SCALAR":
-        return new TypedReference(
-            findDartType(typeSchema.name), GraphType.SCALAR);
+        return findScalarType(typeSchema.name);
       case "ENUM":
         String typeName = typeSchema.name;
         TypedReference generated = findType(typeName, _file);

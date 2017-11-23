@@ -9,10 +9,9 @@ environment:
 
 dependencies:
   http: ^0.11.3+16
-
+  meta: ^1.1.2
 
 #  path: ^1.4.1
 
 dev_dependencies:
   test: ^0.12.0
-

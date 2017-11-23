@@ -97,4 +97,33 @@ class MapObject {
   }
 }
 
-T Identity<T>(T t) => t;
+Map<String, ScalarSerializer> scalarSerializers = {
+  "DateTime": new DateTimeConverter()
+};
+
+abstract class ScalarSerializer<T> {
+  dynamic serialize(T data);
+  T deserialize(dynamic value);
+  bool isType(dynamic value);
+  String get dartName;
+  String get dartPackage;
+}
+
+class DateTimeConverter implements ScalarSerializer<DateTime> {
+  @override
+  DateTime deserialize(d) => d == null ? null : DateTime.parse(d);
+
+  isType(dynamic value) => value is DateTime;
+
+  @override
+  serialize(DateTime data) {
+    if (data is DateTime) {
+      return data.toIso8601String();
+    }
+  }
+
+  String get dartName => "DateTime";
+
+  @override
+  String get dartPackage => null;
+}

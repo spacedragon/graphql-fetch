@@ -1,2 +1,3 @@
 
-export 'src/client.dart' show RestClient, GraphqlClient, Identity , JsonResponse, MapObject, GraphqlQuery, GraphqlResponse;
+export 'src/client.dart' show RestClient, GraphqlClient, JsonResponse, MapObject, GraphqlQuery, GraphqlResponse, ScalarSerializer, scalarSerializers;
+

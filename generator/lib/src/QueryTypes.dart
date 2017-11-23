@@ -18,15 +18,14 @@ class QueryTypes extends BaseTypes {
         return new TypedReference(
             refer("Iterable<${genericType.reference.symbol}>", "dart:core"),
             GraphType.LIST,
-            genericType);
+            genericReference: genericType);
       case "OBJECT":
         String typeName = typeSchema.name;
         var className =
             generateClassForType(b, context, _schema.findObject(typeName));
         return new TypedReference(refer(className), GraphType.OBJECT);
       case "SCALAR":
-        return new TypedReference(
-            findDartType(typeSchema.name), GraphType.SCALAR);
+        return findScalarType(typeSchema.name);
       default:
         return new TypedReference(
             refer("dynamic", "dart:core"), GraphType.OTHER);

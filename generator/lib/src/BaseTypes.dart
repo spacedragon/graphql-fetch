@@ -5,22 +5,25 @@ class BaseTypes {
 
   BaseTypes(this._schema);
 
-  Reference findDartType(String graphqlType) {
+  TypedReference findScalarType(String graphqlType) {
     switch (graphqlType) {
       case "Int":
-        return refer("int", "dart:core");
+        return new TypedReference(refer("int", "dart:core"), GraphType.SCALAR);
       case "ID":
-        return refer("String", "dart:core");
+        return new TypedReference(refer("String", "dart:core"),GraphType.SCALAR);
       case "String":
-        return refer("String", "dart:core");
+        return new TypedReference(refer("String", "dart:core"),GraphType.SCALAR);
       case "Float":
-        return refer("double", "dart:core");
+        return new TypedReference(refer("double", "dart:core"),GraphType.SCALAR);
       case "Boolean":
-        return refer("bool", "dart:core");
-      case "DateTime":
-        return refer("DatTime", "dart:core");
+        return new TypedReference(refer("bool", "dart:core"),GraphType.SCALAR);
       default:
-        return refer("dynamic", "dart:core");
+        var serializer = scalarSerializers[graphqlType];
+        if(serializer!=null){
+          return new TypedReference(refer(serializer.dartName, serializer.dartPackage),
+            GraphType.OTHER, scalaTypeName: graphqlType);
+        }
+        return new TypedReference(refer("dynamic", "dart:core"),GraphType.SCALAR);
     }
   }
 
@@ -29,7 +32,7 @@ class BaseTypes {
     return findType(fragName, currentPath);
   }
 
-  final MapObject =
+  final baseClass =
       refer("MapObject", "package:graphql_fetch/graphql_fetch.dart");
 
   upperCaseFirst(String s) {
@@ -54,7 +57,7 @@ class BaseTypes {
 
   generateClass(ClassBuilder cb, String className, Map<String, TypedReference> fields) {
       cb.name = className;
-      cb.extend = MapObject;
+      cb.extend = baseClass;
 
       for (var name in fields.keys) {
         TypedReference type = fields[name];
@@ -80,32 +83,35 @@ class BaseTypes {
       ..returns = type.reference
       ..lambda = true
       ..type = MethodType.getter
-      ..body = new Code(getterCode(name, type));
+      ..body = getterCode(name, type);
     return getter.build();
   }
 
   getterCode(String name, TypedReference type) {
     switch (type.type) {
       case GraphType.OBJECT:
-        return '${type.reference.symbol}.fromMap(this["$name"])';
+        return new Code('${type.reference.symbol}.fromMap(this["$name"])');
       case GraphType.INPUT_OBJECT:
-        return '${type.reference.symbol}.fromMap(this["$name"])';
+        return new Code('${type.reference.symbol}.fromMap(this["$name"])');
       case GraphType.ENUM:
-        return '${type.reference.symbol}.values[this["$name"]]';
+        return new Code('${type.reference.symbol}.values[this["$name"]]');
       case GraphType.LIST:
         if (type.genericReference.type == GraphType.OBJECT ||
             type.genericReference.type == GraphType.INPUT_OBJECT) {
-          return 'this["$name"]?.map(${type.genericReference
-              .reference.symbol}.fromMap)';
+          return new Code('this["$name"]?.map(${type.genericReference
+              .reference.symbol}.fromMap)');
         } else if (type.genericReference.type == GraphType.ENUM) {
-          return 'this["$name"]?.map((v) => ${type.genericReference
-              .reference.symbol}.values[v])';
+          return new Code('this["$name"]?.map((v) => ${type.genericReference
+              .reference.symbol}.values[v])');
         } else {
-          return 'this["$name"]';
+          return new Code('this["$name"]');
         }
         break;
+      case GraphType.OTHER:
+        Reference r = refer('scalarSerializers','package:graphql_fetch/graphql_fetch.dart');
+        return new Code.scope((a)=> '${a(r)}["${type.scalaTypeName}"].deserialize(this["$name"])');
       default:
-        return 'this["$name"]';
+        return new Code('this["$name"]');
     }
   }
 
@@ -118,8 +124,8 @@ class TypedReference {
   Reference reference;
   GraphType type;
   TypedReference genericReference;
-
-  TypedReference(this.reference, this.type, [this.genericReference]);
+  String scalaTypeName;
+  TypedReference(this.reference, this.type, {this.genericReference, this.scalaTypeName});
 
   String file;
 }

@@ -1,15 +1,14 @@
 library graphql_fetch.client;
 
 import 'dart:async';
-import 'dart:collection';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:meta/meta.dart';
+
 part 'graphql_query.dart';
 
-
-class RestClient extends http.BaseClient{
+class RestClient extends http.BaseClient {
   http.Client _client;
   String _endpoint;
   Uri _baseUri;
@@ -25,16 +24,28 @@ class RestClient extends http.BaseClient{
     configureRequest(request);
     return _client.send(request);
   }
-  String toJson(Map<String ,dynamic> data) {
-    return JSON.encode(data);
+
+  String toJson(Map<String, dynamic> data) {
+    return JSON.encode(data, toEncodable: toEncodable);
+  }
+
+  toEncodable(d) {
+    for (ScalarSerializer c in scalarSerializers.values) {
+      if(c.isType(d)) {
+        return c.serialize(d);
+      }
+    }
+    if(d is MapObject) {
+      return d.toJson();
+    }
+    return d;
   }
 
   Future<JsonResponse> postJson(String path, Map<String, dynamic> data) async {
     String body = toJson(data);
     Uri uri = _baseUri.replace(path: _baseUri.path + path);
     http.Response response = await this.post(uri.toString(),
-        body: body,
-        headers: {'Content-Type': 'application/json'});
+        body: body, headers: {'Content-Type': 'application/json'});
     return handleJsonResponse(response);
   }
 
@@ -43,8 +54,8 @@ class RestClient extends http.BaseClient{
       String bodyString = UTF8.decode(response.bodyBytes);
       return new JsonResponse(bodyString);
     } else {
-      throw new http.ClientException("network error:${response.statusCode}\n"
-          + response.body);
+      throw new http.ClientException(
+          "network error:${response.statusCode}\n" + response.body);
     }
   }
 
@@ -52,15 +63,13 @@ class RestClient extends http.BaseClient{
     var body = toJson(data);
     Uri uri = _baseUri.replace(path: _baseUri.path + path);
     http.Response response = await this.put(uri.toString(),
-        body: body,
-        headers: {'Content-Type': 'application/json'});
+        body: body, headers: {'Content-Type': 'application/json'});
     return handleJsonResponse(response);
   }
 
   Future<dynamic> getJson(String path, Map<String, dynamic> queries) async {
     Uri uri = _baseUri.replace(
-        path: _baseUri.path + path,
-        queryParameters: toQueries(queries));
+        path: _baseUri.path + path, queryParameters: toQueries(queries));
     http.Response response = await this.get(uri.toString());
     return handleJsonResponse(response);
   }
@@ -78,8 +87,8 @@ class RestClient extends http.BaseClient{
 class GraphqlClient extends RestClient {
   GraphqlClient(String endpoint) : super(endpoint);
 
-  Future<JsonResponse> request<T>(String query,
-      Map<String, dynamic> variables) async {
+  Future<JsonResponse> request<T>(
+      String query, Map<String, dynamic> variables) async {
     var result = await postJson("", {"query": query, "variables": variables});
     return result;
   }
@@ -88,7 +97,7 @@ class GraphqlClient extends RestClient {
     JsonResponse result = await request(query.query, query.variables);
     return result.decode((body) {
       Map map = JSON.decode(body);
-      return new GraphqlResponse(query.constructorOfData ,map);
+      return new GraphqlResponse(query.constructorOfData, map);
     });
   }
 }

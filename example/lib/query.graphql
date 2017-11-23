@@ -11,6 +11,7 @@ query someShow($first: Int!) {
 fragment showWithAlias on Show {
     id
     title
+    createdAt
     aliases {
         id
         alias

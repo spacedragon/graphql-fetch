@@ -13,7 +13,7 @@ class Fragment extends BaseTypes{
     QueryTypes queryTypes= new QueryTypes(_schema, className, path);
     Class cls = new Class((ClassBuilder cb) {
       cb..name=className
-      ..implements.add(MapObject)
+      ..implements.add(baseClass)
       ..abstract =true;
       String onType = this._context.typeCondition.typeName.name;
       var querySchema = this._schema.findObject(onType);
