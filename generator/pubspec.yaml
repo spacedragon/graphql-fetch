@@ -19,7 +19,7 @@ dependencies:
   path: ^1.5.0
   glob: ^1.1.5
   barback: ^0.15.2+13
-  build_barback: ^0.4.0+2
+  build_barback: ^0.4.0
 
 dev_dependencies:
   test: ^0.12.0
