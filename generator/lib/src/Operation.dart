@@ -27,9 +27,12 @@ class Operation extends BaseTypes {
   generateCode(String resultClass) {
     Reference graphqlQuery =
         refer("GraphqlQuery", "package:graphql_fetch/graphql_fetch.dart");
-    List<String> variables = _context.variableDefinitions.variableDefinitions
+    List<String> variables = [];
+    if (_context.variableDefinitions != null) {
+      variables = _context.variableDefinitions.variableDefinitions
         .map((v) => '"${v.variable.name}": ${v.variable.name}')
         .toList();
+    }
     String query = wrapStringCode(_context.span.text);
 
     List<String> strings = _queryTypes.depFragments.map((r) => "${r
@@ -39,7 +42,7 @@ class Operation extends BaseTypes {
       return "const query = $query;"
           "return new ${a(graphqlQuery)}("
           "${strings.join(" + ")},"
-          "{${variables.join(',')}},"
+          "${variables.length> 1 ? variables.join(','): null},"
           "${resultClass}.fromMap);";
     });
   }
@@ -54,7 +57,6 @@ class Operation extends BaseTypes {
     b.body.add(cls);
     return resultClassName;
   }
-
   generateReturn(FileBuilder b) {
     for (SelectionContext sel in _context.selectionSet.selections) {
       String field = sel.field.fieldName.name;

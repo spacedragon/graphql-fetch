@@ -12,8 +12,9 @@ class RestClient extends http.BaseClient {
   http.Client _client;
   String _endpoint;
   Uri _baseUri;
+  String _authToken;
 
-  RestClient(this._endpoint) {
+  RestClient(this._endpoint, this._authToken) {
     this._client = new http.Client();
     this._baseUri = Uri.parse(this._endpoint);
   }
@@ -45,7 +46,12 @@ class RestClient extends http.BaseClient {
     String body = toJson(data);
     Uri uri = _baseUri.replace(path: _baseUri.path + path);
     http.Response response = await this.post(uri.toString(),
-        body: body, headers: {'Content-Type': 'application/json'});
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': _authToken
+        }
+      );
     return handleJsonResponse(response);
   }
 
@@ -85,7 +91,7 @@ class RestClient extends http.BaseClient {
 }
 
 class GraphqlClient extends RestClient {
-  GraphqlClient(String endpoint) : super(endpoint);
+  GraphqlClient(String endpoint, String authToken) : super(endpoint, authToken);
 
   Future<JsonResponse> request<T>(
       String query, Map<String, dynamic> variables) async {
@@ -118,7 +124,8 @@ main() async {
       }
     }""";
   GraphqlClient cli = new GraphqlClient(
-      "http://localhost:60000/simple/v1/cj9mldxkd008c017544mu2vhw");
+      "http://localhost:60000/simple/v1/cj9mldxkd008c017544mu2vhw",
+      "test token");
   var result = await cli.request(query, {"alias": "atest"});
   print(result);
 }
