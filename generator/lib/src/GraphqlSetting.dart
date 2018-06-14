@@ -8,9 +8,10 @@ GraphqlBuildSetting createSetting(
     {String schemaUrl,
       String method: "post",
       bool postIntrospectionQuery: true,
-      String schemaFile}) {
-  return new GraphqlBuildSetting(
-      schemaUrl, method, postIntrospectionQuery, schemaFile);
+      String schemaFile,
+      String authToken
+      }) {
+  return new GraphqlBuildSetting(schemaUrl, method, postIntrospectionQuery, schemaFile, authToken);
 }
 
 class GraphqlBuildSetting {
@@ -18,12 +19,13 @@ class GraphqlBuildSetting {
 
   String schemaUrl;
   String method;
+  String authToken;
   bool postIntrospectionQuery;
 
   String schemaFile;
 
   GraphqlBuildSetting(this.schemaUrl, this.method, this.postIntrospectionQuery,
-      this.schemaFile);
+      this.schemaFile, this.authToken);
 
   dynamic _schemaObject = null;
 
@@ -34,7 +36,7 @@ class GraphqlBuildSetting {
         var fileContent = await new File(schemaFile).readAsString();
         _schemaObject = new JsonObject.fromJsonString(fileContent);
       } else if (schemaUrl != null) {
-        var client = new RestClient(this.schemaUrl);
+        var client = new RestClient(this.schemaUrl, this.authToken);
         log.info("fetching schema from url:${this.schemaUrl}");
         JsonResponse result;
         if (method == "post") {
