@@ -125,7 +125,7 @@ main() async {
     }""";
   GraphqlClient cli = new GraphqlClient(
       "http://localhost:60000/simple/v1/cj9mldxkd008c017544mu2vhw",
-      "token 4476588976a53d2ceb1d7bfaf94e41bb056ecad4");
+      "test token");
   var result = await cli.request(query, {"alias": "atest"});
   print(result);
 }
